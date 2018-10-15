@@ -1,7 +1,7 @@
 import methods
 
 def main():
-    f = open('entrada.txt', 'r')
+    f = open('input.txt', 'r')
     for line in f:
         cmd = line.split()
         method = getattr(methods, cmd[0])
