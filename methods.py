@@ -1,59 +1,59 @@
 import mpmath
 import sympy
 
-def euler:
+def euler(params):
     pass
 
-def euler_inverso:
+def euler_inverso(params):
     pass
 
-def euler_aprimorado:
+def euler_aprimorado(params):
     pass
 
-def runge_kutta:
+def runge_kutta(params):
     pass
 
-def adam_bashforth:
+def adam_bashforth(params):
     pass
 
-def adam_bashforth_by_euler:
+def adam_bashforth_by_euler(params):
     pass
 
-def adam_bashforth_by_euler_inverso:
+def adam_bashforth_by_euler_inverso(params):
     pass
 
-def adam_bashforth_by_euler_aprimorado:
+def adam_bashforth_by_euler_aprimorado(params):
     pass
 
-def adam_bashforth_by_runge_kutta:
+def adam_bashforth_by_runge_kutta(params):
     pass
 
-def adam_multon:
+def adam_multon(params):
     pass
 
-def adam_multon_by_euler:
+def adam_multon_by_euler(params):
     pass
 
-def adam_multon_by_euler_inverso:
+def adam_multon_by_euler_inverso(params):
     pass
 
-def adam_multon_by_euler_aprimorado:
+def adam_multon_by_euler_aprimorado(params):
     pass
     
-def adam_multon_by_runge_kutta:
+def adam_multon_by_runge_kutta(params):
     pass
 
-def formula_inversa:
+def formula_inversa(params):
     pass
 
-def formula_inversa_by_euler:
+def formula_inversa_by_euler(params):
     pass
 
-def formula_inversa_by_euler_inverso:
+def formula_inversa_by_euler_inverso(params):
     pass
 
-def formula_inversa_by_euler_aprimorado:
+def formula_inversa_by_euler_aprimorado(params):
     pass
 
-def formula_inversa_by_runge_kutta:
+def formula_inversa_by_runge_kutta(params):
     pass
