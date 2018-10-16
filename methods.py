@@ -1,7 +1,7 @@
 from formulas import *
 from sympy.parsing.sympy_parser import parse_expr
 
-def euler(params):
+def DefinedOrderMethods(params, formula, title):
     y0 = float(params[0])
     t0 = float(params[1])
     h = float(params[2])
@@ -9,7 +9,7 @@ def euler(params):
     f = parse_expr(params[4])
     o = open('output.txt', 'a')
 
-    o.write('Metodo de Euler\n')
+    o.write(title)
     o.write('y( {0} ) = {1}\n'.format(t0, y0))
     o.write('h = {0}\n'.format(h))
     o.write('{0} {1}\n'.format(0, y0))
@@ -17,81 +17,24 @@ def euler(params):
     i = 0
     yn = y0
     while i < steps:
-        yn1 = eulerFormula(f, yn, t0+(i*h), h)
+        yn1 = formula(f, yn, t0+(i*h), h)
         o.write('{0} {1}\n'.format(i+1, yn1))
         yn = yn1
         i += 1
 
     o.close()
+
+def euler(params):
+    DefinedOrderMethods(params, eulerFormula, 'Metodo de Euler\n')
 
 def euler_inverso(params):
-    y0 = float(params[0])
-    t0 = float(params[1])
-    h = float(params[2])
-    steps = float(params[3])
-    f = parse_expr(params[4])
-    o = open('output.txt', 'a')
-
-    o.write('Metodo de Euler Inverso\n')
-    o.write('y( {0} ) = {1}\n'.format(t0, y0))
-    o.write('h = {0}\n'.format(h))
-    o.write('{0} {1}\n'.format(0, y0))
-
-    i = 0
-    yn = y0
-    while i < steps:
-        yn1 = backwardEulerFormula(f, yn, t0+(h*i), h)
-        o.write('{0} {1}\n'.format(i+1, yn1))
-        yn = yn1
-        i += 1
-
-    o.close()
+    DefinedOrderMethods(params, backwardEulerFormula, 'Metodo de Euler Inverso\n')
 
 def euler_aprimorado(params):
-    y0 = float(params[0])
-    t0 = float(params[1])
-    h = float(params[2])
-    steps = float(params[3])
-    f = parse_expr(params[4])
-    o = open('output.txt', 'a')
-
-    o.write('Metodo de Euler Aprimorado\n')
-    o.write('y( {0} ) = {1}\n'.format(t0, y0))
-    o.write('h = {0}\n'.format(h))
-    o.write('{0} {1}\n'.format(0, y0))
-
-    i = 0
-    yn = y0
-    while i < steps:
-        yn1 = improvedEulerFormula(f, yn, t0+(h*i), h)
-        o.write('{0} {1}\n'.format(i+1, yn1))
-        yn = yn1
-        i += 1
-
-    o.close()
+    DefinedOrderMethods(params, improvedEulerFormula, 'Metodo de Euler Aprimorado\n')
 
 def runge_kutta(params):
-    y0 = float(params[0])
-    t0 = float(params[1])
-    h = float(params[2])
-    steps = float(params[3])
-    f = parse_expr(params[4])
-    o = open('output.txt', 'a')
-
-    o.write('Metodo de Runge-Kutta\n')
-    o.write('y( {0} ) = {1}\n'.format(t0, y0))
-    o.write('h = {0}\n'.format(h))
-    o.write('{0} {1}\n'.format(0, y0))
-
-    i = 0
-    yn = y0
-    while i < steps:
-        yn1 = rungeKuttaFormula(f, yn, t0+(h*i), h)
-        o.write('{0} {1}\n'.format(i+1, yn1))
-        yn = yn1
-        i += 1
-    
-    o.close()
+    DefinedOrderMethods(params, rungeKuttaFormula, 'Metodo de Runge-Kutta\n')
 
 def adam_bashforth(params):
     pass

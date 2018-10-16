@@ -16,7 +16,7 @@ def improvedEulerFormula(f, yn, tn, h):
     fn1 = f.evalf(subs={y: eulerFormula(f, yn, tn, h), t: tn+h})
     return yn + (fn+fn1)*(h/2)
 
-def rungeKuttaFormula(f, yn, tn, h):
+def rungeKuttaFormula(f, yn, tn, h): # Considering 4th order
     kn1 = f.evalf(subs={y: yn, t: tn})
     kn2 = f.evalf(subs={y: yn+((h*kn1)/2), t: tn+(h/2)})
     kn3 = f.evalf(subs={y: yn+((h*kn2)/2), t: tn+(h/2)})
