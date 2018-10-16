@@ -37,11 +37,11 @@ def euler_inverso(params):
     o.write('h = {0}\n'.format(h))
     o.write('{0} {1}\n'.format(0, y0))
 
-    i = 1
+    i = 0
     yn = y0
-    while i <= steps:
+    while i < steps:
         yn1 = backwardEulerFormula(f, yn, t0+(h*i), h)
-        o.write('{0} {1}\n'.format(i, yn1))
+        o.write('{0} {1}\n'.format(i+1, yn1))
         yn = yn1
         i += 1
 
