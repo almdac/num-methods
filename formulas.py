@@ -1,24 +1,77 @@
-from sympy import Symbol
+from sympy.solvers.solveset import linsolve
+from sympy import *
 
-y = Symbol('y')
-t = Symbol('t')
+def createPolynomial(order, A):
+    p = 0
+    i = 0
+    t = Symbol('t')
+    for a in reversed(A):
+        p += a*(t**i)
+        i += 1
+
+    return p;
+
+def createPolynomialSystem(order, A, T, F):
+    system = []
+    for t, f in zip(T,F):
+        i = 0
+        p = 0
+        for a in reversed(A):
+            p += a*(t**i)
+            i += 1
+        p -= f
+        system.append(p)
+    
+    return system
+        
+def adamsBashforthFormula(order):
+    A = [Symbol('A'), Symbol('B'), Symbol('C'), Symbol('D'), Symbol('E'), Symbol('F'), Symbol('G'), Symbol('H')][0:order]
+    T = [Symbol('tn'), Symbol('tn-1'), Symbol('tn-2'), Symbol('tn-3'), Symbol('tn-4'), Symbol('tn-5'), Symbol('tn-6'), Symbol('tn-7')][0:order]
+    F = [Symbol('fn'), Symbol('fn-1'), Symbol('fn-2'), Symbol('fn-3'), Symbol('fn-4'), Symbol('fn-5'), Symbol('fn-6'), Symbol('fn-7')][0:order]
+
+    p = createPolynomial(order, A)
+    p = integrate(p, Symbol('t'))
+    p = p.subs({Symbol('t'): Symbol('tn+1')}) - p.subs({Symbol('t'): Symbol('tn')})
+    solutions = linsolve(createPolynomialSystem(order, A, T, F), A)
+
+    for s in solutions:
+        for a, r in zip(A,s):
+            p = p.subs({a: r})
+
+    yn1 = Symbol('yn') + p
 
 def eulerFormula(f, yn, tn, h):
+    y = Symbol('y')
+    t = Symbol('t')
+
     fn = f.evalf(subs={y: yn, t: tn})
+
     return yn+(fn*h)
 
 def backwardEulerFormula(f, yn, tn, h):
+    y = Symbol('y')
+    t = Symbol('t')
+
     fn1 = f.evalf(subs={y: eulerFormula(f, yn, tn, h), t: tn+h})
+
     return yn+(fn1*h)
 
 def improvedEulerFormula(f, yn, tn, h):
+    y = Symbol('y')
+    t = Symbol('t')
+
     fn = f.evalf(subs={y: yn, t: tn})
     fn1 = f.evalf(subs={y: eulerFormula(f, yn, tn, h), t: tn+h})
+
     return yn + (fn+fn1)*(h/2)
 
 def rungeKuttaFormula(f, yn, tn, h): # Considering 4th order
+    y = Symbol('y')
+    t = Symbol('t')
+
     kn1 = f.evalf(subs={y: yn, t: tn})
     kn2 = f.evalf(subs={y: yn+((h*kn1)/2), t: tn+(h/2)})
     kn3 = f.evalf(subs={y: yn+((h*kn2)/2), t: tn+(h/2)})
     kn4 = f.evalf(subs={y: yn+(h*kn3), t: tn+h})
+
     return yn + (kn1+(2*kn2)+(2*kn3)+kn4)*(h/6)
