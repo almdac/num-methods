@@ -10,15 +10,15 @@ def DefinedOrderMethods(params, formula, title):
     o = open('output.txt', 'a')
 
     o.write(title)
-    o.write('y( {0} ) = {1}\n'.format(t0, y0))
-    o.write('h = {0}\n'.format(h))
-    o.write('{0} {1}\n'.format(0, y0))
+    o.write('y( {} ) = {}\n'.format(t0, y0))
+    o.write('h = {}\n'.format(h))
+    o.write('{} {}\n'.format(0, y0))
 
     i = 0
     yn = y0
     while i < steps:
         yn1 = formula(f, yn, t0+(i*h), h)
-        o.write('{0} {1}\n'.format(i+1, yn1))
+        o.write('{} {}\n'.format(i+1, yn1))
         yn = yn1
         i += 1
 
@@ -37,7 +37,12 @@ def runge_kutta(params):
     DefinedOrderMethods(params, rungeKuttaFormula, 'Metodo de Runge-Kutta\n')
 
 def adam_bashforth(params):
-    pass
+    order = params[len(params)-1]
+    f = parse_expr(params[len(params)-2])
+    steps = params[len(params)-3]
+    h = params[len(params)-4]
+    t0 = params[len(params)-5]
+    points = params[0:order]
 
 def adam_multon(params):
     pass
