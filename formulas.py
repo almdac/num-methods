@@ -1,53 +1,40 @@
-from sympy.solvers.solveset import linsolve
 from sympy import *
 
-def createPolynomial(order, A):
-    p = 0
+def AdamsPolynomialProductory(order, i):
+    j = 0
+    eq = 1
+    while j < order:
+        if j != i:
+            eq *= (Symbol('t')-Symbol('tn+{}'.format(j)))/(Symbol('tn+{}'.format(i))-Symbol('tn+{}'.format(j)))
+        j += 1
+    return eq
+
+def aproxIntegral(order):
     i = 0
-    t = Symbol('t')
-    for a in reversed(A):
-        p += a*(t**i)
+    eq = 0
+    while i < order:
+        eqp = integrate(AdamsPolynomialProductory(order, i), Symbol('t'))
+        eqp = eqp.evalf(subs={'t': 'tn+{}'.format(order)})-eqp.evalf(subs={'t': 'tn+{}'.format(order-1)})
+        eqp *= Symbol('fn+{}'.format(i))
+        eq += eqp
         i += 1
+    return eq
 
-    return p
-
-def createPolynomialSystem(order, A, T, F):
-    system = []
-    for t, f in zip(T,F):
-        i = 0
-        p = 0
-        for a in reversed(A):
-            p += a*(t**i)
-            i += 1
-        p -= f
-        system.append(p)
-    
-    return system
-        
-def adamsBashforthFormula(f, ypoints, t0, h, order):
-    A = [Symbol('A'), Symbol('B'), Symbol('C'), Symbol('D'), Symbol('E'), Symbol('F'), Symbol('G'), Symbol('H')][0:order]
-    T = [Symbol('tn'), Symbol('tn-1'), Symbol('tn-2'), Symbol('tn-3'), Symbol('tn-4'), Symbol('tn-5'), Symbol('tn-6'), Symbol('tn-7')][0:order]
-    F = [Symbol('fn'), Symbol('fn-1'), Symbol('fn-2'), Symbol('fn-3'), Symbol('fn-4'), Symbol('fn-5'), Symbol('fn-6'), Symbol('fn-7')][0:order]
-
-    p = createPolynomial(order, A)
-    p = integrate(p, Symbol('t'))
-    p = p.subs({'t': Symbol('tn+1')}) - p.subs({'t': Symbol('tn')})
-    solutions = linsolve(createPolynomialSystem(order, A, T, F), A)
-
-    for s in solutions:
-        for a, r in zip(A,s):
-            p = p.subs({a: r})
+def adamsBashforthFormula(f, ypoints, t, h, order):
+    aprox_integral = aproxIntegral(order)
 
     i = 0
     fpoints = []
     for yp in ypoints:
-        fpoints.append(f.evalf(subs={'y': yp, 't': t0+(i*h)}))
+        fpoints.append(f.evalf(subs={'y': yp, 't': t+(h*i)}))
+        i += 1
 
     i = 0
-    for fp, t, f in zip(fpoints, reversed(T), reversed(F)):
-        p = p.evalf(subs={t: t0+(i*h), f: fp})
-
-    return ypoints[len(ypoints)-1] + p
+    for fp in fpoints:
+        aprox_integral = aprox_integral.evalf(subs={'tn+{}'.format(i): t+(h*i),'fn+{}'.format(i): fp})
+        i += 1
+    
+    return ypoints[len(ypoints)-1] + aprox_integral
 
 def eulerFormula(f, yn, tn, h):
     fn = f.evalf(subs={'y': yn, 't': tn})

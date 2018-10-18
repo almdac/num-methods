@@ -37,12 +37,35 @@ def runge_kutta(params):
     DefinedOrderMethods(params, rungeKuttaFormula, 'Metodo de Runge-Kutta\n')
 
 def adam_bashforth(params):
-    order = params[len(params)-1]
+    order = int(params[len(params)-1])
     f = parse_expr(params[len(params)-2])
-    steps = params[len(params)-3]
-    h = params[len(params)-4]
-    t0 = params[len(params)-5]
-    points = params[0:order]
+    steps = float(params[len(params)-3])
+    h = float(params[len(params)-4])
+    t0 = float(params[len(params)-5])
+    ypoints = params[0:order]
+
+    i = 0
+    while i < order:
+        ypoints[i] = float(ypoints[i])
+        i += 1
+        
+    o = open('output.txt', 'a')
+    o.write('Metodo de Adams-Bashforth')
+    o.write('y( {} ) = {}\n'.format(t0, ypoints[0]))
+    o.write('h = {}\n'.format(h))
+    
+    i = 0
+    for yp in ypoints:
+        o.write('{} {}\n'.format(i, yp))
+        i += 1
+    
+    i = 0
+    while i < steps:
+        ynk = adamsBashforthFormula(f, ypoints, t0+(h*i), h, order)
+        o.write('{} {}\n'.format(i+1+order, ynk))
+        ypoints.append(ynk)
+        ypoints.pop(0)
+        i += 1
 
 def adam_multon(params):
     pass
