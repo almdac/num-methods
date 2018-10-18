@@ -29,6 +29,36 @@ def adamsBashforthFormula(f, ypoints, tn, h, order, recurrence_relation):
         
     return recurrence_relation.subs('yn+{}'.format(order-1), ypoints[len(ypoints)-1])
 
+def calculateAdamsMoultonforthCoeffs(order, j):
+    k = 0
+    product = 1
+    while k <= order:
+        if (k != order-j-1):
+            product *= (Symbol('x')+k-1)
+        k += 1
+    return (((-1)**(order-j))/(math.factorial(j)*math.factorial(order-j)))*integrate(product, (Symbol('x'), 0, 1))
+
+def calculateAdamsMoultonIntegral(order, coeffs):
+    j = 0
+    eq = 0
+    for c in coeffs:
+        eq += c*Symbol('fn+{}'.format(j))
+        j += 1
+    return eq
+
+def buildAdamsMoultonRecurrenceRelation(order, h, coeffs):
+    return Symbol('yn+{}'.format(order-1)) + h*calculateAdamsMoultonIntegral(order, coeffs)
+
+def adamsMoultonFormula(f, ypoints, tn, h, order, recurrence_relation):
+    j = 0
+    for yp in ypoints:
+        recurrence_relation = recurrence_relation.subs('fn+{}'.format(j), f.subs({'y': yp, 't': tn+(j*h)}))
+        j += 1
+    
+    recurrence_relation.subs('fn+{}'.format(order), f.subs({'y': eulerFormula(f, ypoints[len(ypoints)-1], tn+(order*h), h), 't': tn+(order*h)}))
+
+    return recurrence_relation.subs('yn+{}'.format(order-1), ypoints[len(ypoints)-1])
+
 def eulerFormula(f, yn, tn, h):
     fn = f.evalf(subs={'y': yn, 't': tn})
 
