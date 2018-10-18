@@ -18,7 +18,7 @@ def calculateAdamsBashforthIntegral(order, coeffs):
         j += 1
     return eq
 
-def buildRecurrenceRelation(order, h, coeffs):
+def buildAdamsBashforthRecurrenceRelation(order, h, coeffs):
     return Symbol('yn+{}'.format(order-1)) + h*calculateAdamsBashforthIntegral(order, coeffs)
 
 def adamsBashforthFormula(f, ypoints, tn, h, order, recurrence_relation):
