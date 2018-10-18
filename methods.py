@@ -50,7 +50,7 @@ def adam_bashforth(params):
         i += 1
         
     o = open('output.txt', 'a')
-    o.write('Metodo de Adams-Bashforth')
+    o.write('Metodo de Adams-Bashforth\n')
     o.write('y( {} ) = {}\n'.format(t0, ypoints[0]))
     o.write('h = {}\n'.format(h))
     
@@ -59,9 +59,17 @@ def adam_bashforth(params):
         o.write('{} {}\n'.format(i, yp))
         i += 1
     
+    j = 0
+    coeffs = []
+    while j < order:
+        coeffs.append(calculateAdamsBashforthCoeffs(order, j))
+        j += 1
+
+    recurrence_relation = buildRecurrenceRelation(order, h, coeffs)
+
     i = 0
     while i < steps:
-        ynk = adamsBashforthFormula(f, ypoints, t0+(h*i), h, order)
+        ynk = adamsBashforthFormula(f, ypoints, t0+(h*i), h, order, recurrence_relation)
         o.write('{} {}\n'.format(i+1+order, ynk))
         ypoints.append(ynk)
         ypoints.pop(0)

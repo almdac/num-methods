@@ -1,40 +1,33 @@
 from sympy import *
+import math
 
-def AdamsPolynomialProductory(order, i):
+def calculateAdamsBashforthCoeffs(order, j):
+    k = 0
+    product = 1
+    while k < order:
+        if (k != order-j-1):
+            product *= (Symbol('x')+k)
+        k += 1
+    return (((-1)**(order-j-1))/(math.factorial(j)*math.factorial(order-j-1)))*integrate(product, (Symbol('x'), 0, 1))
+
+def calculateAdamsBashforthIntegral(order, coeffs):
     j = 0
-    eq = 1
-    while j < order:
-        if j != i:
-            eq *= (Symbol('t')-Symbol('tn+{}'.format(j)))/(Symbol('tn+{}'.format(i))-Symbol('tn+{}'.format(j)))
+    eq = 0
+    for c in coeffs:
+        eq += c*Symbol('fn+{}'.format(j))
         j += 1
     return eq
 
-def aproxIntegral(order):
-    i = 0
-    eq = 0
-    while i < order:
-        eqp = integrate(AdamsPolynomialProductory(order, i), Symbol('t'))
-        eqp = eqp.evalf(subs={'t': 'tn+{}'.format(order)})-eqp.evalf(subs={'t': 'tn+{}'.format(order-1)})
-        eqp *= Symbol('fn+{}'.format(i))
-        eq += eqp
-        i += 1
-    return eq
+def buildRecurrenceRelation(order, h, coeffs):
+    return Symbol('yn+{}'.format(order-1)) + h*calculateAdamsBashforthIntegral(order, coeffs)
 
-def adamsBashforthFormula(f, ypoints, t, h, order):
-    aprox_integral = aproxIntegral(order)
-
-    i = 0
-    fpoints = []
+def adamsBashforthFormula(f, ypoints, tn, h, order, recurrence_relation):
+    j = 0
     for yp in ypoints:
-        fpoints.append(f.evalf(subs={'y': yp, 't': t+(h*i)}))
-        i += 1
-
-    i = 0
-    for fp in fpoints:
-        aprox_integral = aprox_integral.evalf(subs={'tn+{}'.format(i): t+(h*i),'fn+{}'.format(i): fp})
-        i += 1
-    
-    return ypoints[len(ypoints)-1] + aprox_integral
+        recurrence_relation = recurrence_relation.subs('fn+{}'.format(j), f.subs({'y': yp, 't': tn+(j*h)}))
+        j += 1
+        
+    return recurrence_relation.subs('yn+{}'.format(order-1), ypoints[len(ypoints)-1])
 
 def eulerFormula(f, yn, tn, h):
     fn = f.evalf(subs={'y': yn, 't': tn})
