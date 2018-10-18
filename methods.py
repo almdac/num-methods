@@ -19,6 +19,39 @@ def definedOrderMethods(params, formula):
     
     return ypoints
 
+def undefinedOrderMethods(params, formula, calculateCoeffs,buildRecurrenceRelation):
+    order = int(params[len(params)-1])
+    f = parse_expr(params[len(params)-2])
+    steps = float(params[len(params)-3])-order+1
+    h = float(params[len(params)-4])
+    t0 = float(params[len(params)-5])
+    prev_ypoints = params[0:order]
+
+    j = 0
+    coeffs = []
+    while j < order:
+        coeffs.append(calculateCoeffs(order, j))
+        j += 1
+
+    recurrence_relation = buildRecurrenceRelation(order, h, coeffs)
+
+    i = 0
+    while i < order:
+        prev_ypoints[i] = float(prev_ypoints[i])
+        i += 1
+    
+    i = 0
+    ypoints = []
+    ypoints.extend(prev_ypoints)
+    while i < steps:
+        ynk = formula(f, prev_ypoints, t0+(h*i), h, order, recurrence_relation)
+        ypoints.append(ynk)
+        prev_ypoints.append(ynk)
+        prev_ypoints.pop(0)
+        i += 1
+    
+    return ypoints
+
 def writePoints(params, ypoints, title):
     y0 = float(params[0])
     t0 = float(params[1])
@@ -50,43 +83,7 @@ def runge_kutta(params):
     writePoints(params, definedOrderMethods(params, rungeKuttaFormula), 'Metodo de Runge-Kutta\n')
 
 def adam_bashforth(params):
-    order = int(params[len(params)-1])
-    f = parse_expr(params[len(params)-2])
-    steps = float(params[len(params)-3])
-    h = float(params[len(params)-4])
-    t0 = float(params[len(params)-5])
-    ypoints = params[0:order]
-
-    i = 0
-    while i < order:
-        ypoints[i] = float(ypoints[i])
-        i += 1
-        
-    o = open('output.txt', 'a')
-    o.write('Metodo de Adams-Bashforth\n')
-    o.write('y( {} ) = {}\n'.format(t0, ypoints[0]))
-    o.write('h = {}\n'.format(h))
-    
-    i = 0
-    for yp in ypoints:
-        o.write('{} {}\n'.format(i, yp))
-        i += 1
-    
-    j = 0
-    coeffs = []
-    while j < order:
-        coeffs.append(calculateAdamsBashforthCoeffs(order, j))
-        j += 1
-
-    recurrence_relation = buildAdamsBashforthRecurrenceRelation(order, h, coeffs)
-
-    i = 0
-    while i < steps:
-        ynk = adamsBashforthFormula(f, ypoints, t0+(h*i), h, order, recurrence_relation)
-        o.write('{} {}\n'.format(i+1+order, ynk))
-        ypoints.append(ynk)
-        ypoints.pop(0)
-        i += 1
+    writePoints(params, undefinedOrderMethods(params, adamsBashforthFormula, calculateAdamsBashforthCoeffs, buildAdamsBashforthRecurrenceRelation), 'Metodo de Adams-Bashforth\n')
 
 def adam_multon(params):
     pass
