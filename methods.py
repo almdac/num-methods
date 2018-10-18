@@ -85,31 +85,40 @@ def runge_kutta(params):
 def adam_bashforth(params):
     writePoints(params, undefinedOrderMethods(params, adamsBashforthFormula, calculateAdamsBashforthCoeffs, buildAdamsBashforthRecurrenceRelation), 'Metodo de Adams-Bashforth\n')
 
-def adam_multon(params):
-    pass
-
-def formula_inversa(params):
-    pass
-
 def adam_bashforth_by_euler(params):
     euler_params = params[0:5]
     euler_params[3] = params[5]
     ypoints = definedOrderMethods(euler_params, eulerFormula)
+    params = ypoints + params[1:6]
+
+    writePoints(params, undefinedOrderMethods(params, adamsBashforthFormula, calculateAdamsBashforthCoeffs, buildAdamsBashforthRecurrenceRelation), 'Metodo de Adams-Bashforth por Euler\n')
 
 def adam_bashforth_by_euler_inverso(params):
     backward_euler_params = params[0:5]
     backward_euler_params[3] = params[5]
     ypoints = definedOrderMethods(backward_euler_params, backwardEulerFormula)
+    params = ypoints + params[1:6]
+
+    writePoints(params, undefinedOrderMethods(params, adamsBashforthFormula, calculateAdamsBashforthCoeffs, buildAdamsBashforthRecurrenceRelation), 'Metodo de Adams-Bashforth por Euler Inverso\n')
 
 def adam_bashforth_by_euler_aprimorado(params):
     improved_euler_params = params[0:5]
     improved_euler_params[3] = params[5]
     ypoints = definedOrderMethods(improved_euler_params, improvedEulerFormula)
+    params = ypoints + params[1:6]
+
+    writePoints(params, undefinedOrderMethods(params, adamsBashforthFormula, calculateAdamsBashforthCoeffs, buildAdamsBashforthRecurrenceRelation), 'Metodo de Adams-Bashforth por Euler Apromirado\n')
 
 def adam_bashforth_by_runge_kutta(params):
     runge_kutta_params = params[0:5]
     runge_kutta_params[3] = params[5]
     ypoints = definedOrderMethods(runge_kutta_params, rungeKuttaFormula)
+    params = ypoints + params[1:6]
+
+    writePoints(params, undefinedOrderMethods(params, adamsBashforthFormula, calculateAdamsBashforthCoeffs, buildAdamsBashforthRecurrenceRelation), 'Metodo de Adams-Bashforth por Runge Kutta\n')
+
+def adam_multon(params):
+    pass
 
 def adam_multon_by_euler(params):
     pass
@@ -122,7 +131,10 @@ def adam_multon_by_euler_aprimorado(params):
     
 def adam_multon_by_runge_kutta(params):
     pass
-    
+
+def formula_inversa(params):
+    pass
+
 def formula_inversa_by_euler(params):
     pass
 
