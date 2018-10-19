@@ -19,7 +19,7 @@ def definedOrderMethods(params, formula):
     
     return ypoints
 
-def undefinedOrderMethods(params, formula, calculateCoeffs,buildRecurrenceRelation):
+def adamsBashforthMethod(params):
     order = int(params[len(params)-1])
     f = parse_expr(params[len(params)-2])
     steps = float(params[len(params)-3])-order+1
@@ -30,10 +30,10 @@ def undefinedOrderMethods(params, formula, calculateCoeffs,buildRecurrenceRelati
     j = 0
     coeffs = []
     while j < order:
-        coeffs.append(calculateCoeffs(order, j))
+        coeffs.append(calculateAdamsBashforthCoeffs(order, j))
         j += 1
 
-    recurrence_relation = buildRecurrenceRelation(order, h, coeffs)
+    recurrence_relation = buildAdamsBashforthRecurrenceRelation(order, h, coeffs)
 
     i = 0
     while i < order:
@@ -44,7 +44,40 @@ def undefinedOrderMethods(params, formula, calculateCoeffs,buildRecurrenceRelati
     ypoints = []
     ypoints.extend(prev_ypoints)
     while i < steps:
-        ynk = formula(f, prev_ypoints, t0+(h*i), h, order, recurrence_relation)
+        ynk = adamsBashforthFormula(f, prev_ypoints, t0+(h*i), h, order, recurrence_relation)
+        ypoints.append(ynk)
+        prev_ypoints.append(ynk)
+        prev_ypoints.pop(0)
+        i += 1
+    
+    return ypoints
+
+def adamsMoultonMethod(params):
+    order = int(params[len(params)-1])
+    f = parse_expr(params[len(params)-2])
+    steps = float(params[len(params)-3])-order+1
+    h = float(params[len(params)-4])
+    t0 = float(params[len(params)-5])
+    prev_ypoints = params[0:order]
+
+    j = 0
+    coeffs = []
+    while j <= order:
+        coeffs.append(calculateAdamsMoultonCoeffs(order, j))
+        j += 1
+
+    recurrence_relation = buildAdamsMoultonRecurrenceRelation(order, h, coeffs)
+
+    i = 0
+    while i < order:
+        prev_ypoints[i] = float(prev_ypoints[i])
+        i += 1
+    
+    i = 0
+    ypoints = []
+    ypoints.extend(prev_ypoints)
+    while i < steps:
+        ynk = adamsMoultonFormula(f, prev_ypoints, t0+(h*i), h, order, recurrence_relation)
         ypoints.append(ynk)
         prev_ypoints.append(ynk)
         prev_ypoints.pop(0)
@@ -83,7 +116,7 @@ def runge_kutta(params):
     writePoints(params, definedOrderMethods(params, rungeKuttaFormula), 'Metodo de Runge-Kutta\n')
 
 def adam_bashforth(params):
-    writePoints(params, undefinedOrderMethods(params, adamsBashforthFormula, calculateAdamsBashforthCoeffs, buildAdamsBashforthRecurrenceRelation), 'Metodo de Adams-Bashforth\n')
+    writePoints(params, adamsBashforthMethod(params), 'Metodo de Adams-Bashforth\n')
 
 def adam_bashforth_by_euler(params):
     euler_params = params[0:5]
@@ -91,7 +124,7 @@ def adam_bashforth_by_euler(params):
     ypoints = definedOrderMethods(euler_params, eulerFormula)
     params = ypoints + params[1:6]
 
-    writePoints(params, undefinedOrderMethods(params, adamsBashforthFormula, calculateAdamsBashforthCoeffs, buildAdamsBashforthRecurrenceRelation), 'Metodo de Adams-Bashforth por Euler\n')
+    writePoints(params, adamsBashforthMethod(params), 'Metodo de Adams-Bashforth por Euler\n')
 
 def adam_bashforth_by_euler_inverso(params):
     backward_euler_params = params[0:5]
@@ -99,7 +132,7 @@ def adam_bashforth_by_euler_inverso(params):
     ypoints = definedOrderMethods(backward_euler_params, backwardEulerFormula)
     params = ypoints + params[1:6]
 
-    writePoints(params, undefinedOrderMethods(params, adamsBashforthFormula, calculateAdamsBashforthCoeffs, buildAdamsBashforthRecurrenceRelation), 'Metodo de Adams-Bashforth por Euler Inverso\n')
+    writePoints(params, adamsBashforthMethod(params), 'Metodo de Adams-Bashforth por Euler Inverso\n')
 
 def adam_bashforth_by_euler_aprimorado(params):
     improved_euler_params = params[0:5]
@@ -107,7 +140,7 @@ def adam_bashforth_by_euler_aprimorado(params):
     ypoints = definedOrderMethods(improved_euler_params, improvedEulerFormula)
     params = ypoints + params[1:6]
 
-    writePoints(params, undefinedOrderMethods(params, adamsBashforthFormula, calculateAdamsBashforthCoeffs, buildAdamsBashforthRecurrenceRelation), 'Metodo de Adams-Bashforth por Euler Apromirado\n')
+    writePoints(params, adamsBashforthMethod(params), 'Metodo de Adams-Bashforth por Euler Apromirado\n')
 
 def adam_bashforth_by_runge_kutta(params):
     runge_kutta_params = params[0:5]
@@ -115,22 +148,42 @@ def adam_bashforth_by_runge_kutta(params):
     ypoints = definedOrderMethods(runge_kutta_params, rungeKuttaFormula)
     params = ypoints + params[1:6]
 
-    writePoints(params, undefinedOrderMethods(params, adamsBashforthFormula, calculateAdamsBashforthCoeffs, buildAdamsBashforthRecurrenceRelation), 'Metodo de Adams-Bashforth por Runge Kutta\n')
+    writePoints(params, adamsBashforthMethod(params), 'Metodo de Adams-Bashforth por Runge Kutta\n')
 
 def adam_multon(params):
-    pass
+    writePoints(params, adamsMoultonMethod(params), 'Metodo de Adams-Moulton\n')
 
 def adam_multon_by_euler(params):
-    pass
+    backward_euler_params = params[0:5]
+    backward_euler_params[3] = params[5]
+    ypoints = definedOrderMethods(backward_euler_params, backwardEulerFormula)
+    params = ypoints + params[1:6]
+
+    writePoints(params, adamsMoultonMethod(params), 'Metodo de Adams-Moulton por Euler\n')
 
 def adam_multon_by_euler_inverso(params):
-    pass
+    backward_euler_params = params[0:5]
+    backward_euler_params[3] = params[5]
+    ypoints = definedOrderMethods(backward_euler_params, backwardEulerFormula)
+    params = ypoints + params[1:6]
+
+    writePoints(params, adamsMoultonMethod(params), 'Metodo de Adams-Moulton por Euler Inverso\n')
 
 def adam_multon_by_euler_aprimorado(params):
-    pass
+    improved_euler_params = params[0:5]
+    improved_euler_params[3] = params[5]
+    ypoints = definedOrderMethods(improved_euler_params, improvedEulerFormula)
+    params = ypoints + params[1:6]
+
+    writePoints(params, adamsMoultonMethod(params), 'Metodo de Adams-Moulton por Euler Aprimorado\n')
     
 def adam_multon_by_runge_kutta(params):
-    pass
+    runge_kutta_params = params[0:5]
+    runge_kutta_params[3] = params[5]
+    ypoints = definedOrderMethods(runge_kutta_params, rungeKuttaFormula)
+    params = ypoints + params[1:6]
+
+    writePoints(params, adamsMoultonMethod(params), 'Metodo de Adams-Moulton por Runge Kutta\n')
 
 def formula_inversa(params):
     pass

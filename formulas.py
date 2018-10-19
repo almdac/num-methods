@@ -29,7 +29,7 @@ def adamsBashforthFormula(f, ypoints, tn, h, order, recurrence_relation):
         
     return recurrence_relation.subs('yn+{}'.format(order-1), ypoints[len(ypoints)-1])
 
-def calculateAdamsMoultonforthCoeffs(order, j):
+def calculateAdamsMoultonCoeffs(order, j):
     k = 0
     product = 1
     while k <= order:
@@ -55,7 +55,7 @@ def adamsMoultonFormula(f, ypoints, tn, h, order, recurrence_relation):
         recurrence_relation = recurrence_relation.subs('fn+{}'.format(j), f.subs({'y': yp, 't': tn+(j*h)}))
         j += 1
     
-    recurrence_relation.subs('fn+{}'.format(order), f.subs({'y': eulerFormula(f, ypoints[len(ypoints)-1], tn+(order*h), h), 't': tn+(order*h)}))
+    recurrence_relation = recurrence_relation.subs('fn+{}'.format(order), f.subs({'y': eulerFormula(f, ypoints[len(ypoints)-1], tn+(order*h), h), 't': tn+(order*h)}))
 
     return recurrence_relation.subs('yn+{}'.format(order-1), ypoints[len(ypoints)-1])
 
