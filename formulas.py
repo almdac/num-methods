@@ -5,9 +5,10 @@ def calculateAdamsBashforthCoeffs(order, j):
     k = 0
     product = 1
     while k < order:
-        if (k != order-j-1):
-            product *= (Symbol('x')+k)
+        if (k != j):
+            product *= (Symbol('x')+order-k-1)
         k += 1
+        
     return (((-1)**(order-j-1))/(math.factorial(j)*math.factorial(order-j-1)))*integrate(product, (Symbol('x'), 0, 1))
 
 def calculateAdamsBashforthIntegral(order, coeffs):
@@ -33,9 +34,10 @@ def calculateAdamsMoultonCoeffs(order, j):
     k = 0
     product = 1
     while k <= order:
-        if (k != order-j-1):
-            product *= (Symbol('x')+k-1)
+        if (k != j):
+            product *= (Symbol('x')+order-k-1)
         k += 1
+
     return (((-1)**(order-j))/(math.factorial(j)*math.factorial(order-j)))*integrate(product, (Symbol('x'), 0, 1))
 
 def calculateAdamsMoultonIntegral(order, coeffs):
