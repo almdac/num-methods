@@ -53,7 +53,7 @@ def adamsBashforthMethod(params):
     return ypoints
 
 def adamsMoultonMethod(params):
-    order = int(params[len(params)-1])
+    order = int(params[len(params)-1])-1
     f = parse_expr(params[len(params)-2])
     steps = float(params[len(params)-3])-order+1
     h = float(params[len(params)-4])
