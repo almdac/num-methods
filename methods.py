@@ -85,6 +85,31 @@ def adamsMoultonMethod(params):
     
     return ypoints
 
+def backwardDifferentiationMethod(params):
+    order = int(params[len(params)-1])-1
+    f = parse_expr(params[len(params)-2])
+    steps = float(params[len(params)-3])-order+1
+    h = float(params[len(params)-4])
+    t0 = float(params[len(params)-5])
+    prev_ypoints = params[0:order]
+
+    i = 0
+    while i < order:
+        prev_ypoints[i] = float(prev_ypoints[i])
+        i += 1
+
+    i = 0
+    ypoints = []
+    ypoints.extend(prev_ypoints)
+    while i < steps:
+        ynk = backwardDifferentiationFormula(f, prev_ypoints, t0+(h*i), h, order)
+        ypoints.append(ynk)
+        prev_ypoints.append(ynk)
+        prev_ypoints.pop(0)
+        i += 1
+    
+    return ypoints
+
 def writePoints(params, ypoints, title):
     y0 = float(params[0])
     t0 = float(params[1])
@@ -186,16 +211,36 @@ def adam_multon_by_runge_kutta(params):
     writePoints(params, adamsMoultonMethod(params), 'Metodo de Adams-Moulton por Runge Kutta\n')
 
 def formula_inversa(params):
-    pass
+    writePoints(params, backwardDifferentiationMethod(params), 'Metodo Formula Inversa de Diferenciacao\n')
 
 def formula_inversa_by_euler(params):
-    pass
+    euler_params = params[0:5]
+    euler_params[3] = params[5]
+    ypoints = definedOrderMethods(euler_params, eulerFormula)
+    params = ypoints + params[1:6]
+
+    writePoints(params, backwardDifferentiationMethod(params), 'Metodo Formula Inversa de Diferenciacao por Euler\n')
 
 def formula_inversa_by_euler_inverso(params):
-    pass
+    backward_euler_params = params[0:5]
+    backward_euler_params[3] = params[5]
+    ypoints = definedOrderMethods(backward_euler_params, backwardEulerFormula)
+    params = ypoints + params[1:6]
+
+    writePoints(params, backwardDifferentiationMethod(params), 'Metodo Formula Inversa de Diferenciacao por Euler Inverso\n')
 
 def formula_inversa_by_euler_aprimorado(params):
-    pass
+    improved_euler_params = params[0:5]
+    improved_euler_params[3] = params[5]
+    ypoints = definedOrderMethods(improved_euler_params, improvedEulerFormula)
+    params = ypoints + params[1:6]
+
+    writePoints(params, backwardDifferentiationMethod(params), 'Metodo Formula Inversa de Diferenciacao por Euler Aprimorado\n')
 
 def formula_inversa_by_runge_kutta(params):
-    pass
+    runge_kutta_params = params[0:5]
+    runge_kutta_params[3] = params[5]
+    ypoints = definedOrderMethods(runge_kutta_params, rungeKuttaFormula)
+    params = ypoints + params[1:6]
+
+    writePoints(params, backwardDifferentiationMethod(params), 'Metodo Formula Inversa de Diferenciacao por Runge Kutta\n')

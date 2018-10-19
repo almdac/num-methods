@@ -84,3 +84,24 @@ def rungeKuttaFormula(f, yn, tn, h): # Considering 4th order
     kn4 = f.evalf(subs={'y': yn+(h*kn3), 't': tn+h})
 
     return yn + (kn1+(2*kn2)+(2*kn3)+kn4)*(h/6)
+
+def backwardDifferentiationFormula(f, ypoints, tn, h, order):
+    recurrence_relations = [
+        Symbol('yn+0') + h*Symbol('fn+1'),
+        Symbol('yn+1') + Symbol('yn+0') + Symbol('fn+2'),
+        Symbol('yn+2') + Symbol('yn+1') + Symbol('yn+0') + Symbol('fn+3'),
+        Symbol('yn+3') + Symbol('yn+2') + Symbol('yn+1') + Symbol('yn+0') + Symbol('fn+4'),
+        Symbol('yn+4') + Symbol('yn+3') + Symbol('yn+2') + Symbol('yn+1') + Symbol('yn+0') + Symbol('fn+5'),
+        Symbol('yn+5') + Symbol('yn+4') + Symbol('yn+3') + Symbol('yn+2') + Symbol('yn+1') + Symbol('yn+0') + Symbol('fn+6')
+    ]
+
+    recurrence_relation = recurrence_relations[order-1]
+
+    j = 0
+    for yp in ypoints:
+        recurrence_relation = recurrence_relation.subs('yn+{}'.format(j), yp)
+        j += 1
+    
+    recurrence_relation = recurrence_relation.subs('fn+{}'.format(order), f.subs({'y': eulerFormula(f, ypoints[len(ypoints)-1], tn+((order-1)*h), h), 't': tn+(order*h)}))
+
+    return recurrence_relation
