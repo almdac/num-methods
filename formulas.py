@@ -57,7 +57,7 @@ def adamsMoultonFormula(f, ypoints, tn, h, order, recurrence_relation):
         recurrence_relation = recurrence_relation.subs('fn+{}'.format(j), f.subs({'y': yp, 't': tn+(j*h)}))
         j += 1
     
-    recurrence_relation = recurrence_relation.subs('fn+{}'.format(order), f.subs({'y': eulerFormula(f, ypoints[len(ypoints)-1], tn+((order-1)*h), h), 't': tn+((order-1)*h)}))
+    recurrence_relation = recurrence_relation.subs('fn+{}'.format(order), f.subs({'y': eulerFormula(f, ypoints[len(ypoints)-1], tn+((order-1)*h), h), 't': tn+(order*h)}))
 
     return recurrence_relation.subs('yn+{}'.format(order-1), ypoints[len(ypoints)-1])
 
