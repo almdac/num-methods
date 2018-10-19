@@ -154,9 +154,9 @@ def adam_multon(params):
     writePoints(params, adamsMoultonMethod(params), 'Metodo de Adams-Moulton\n')
 
 def adam_multon_by_euler(params):
-    backward_euler_params = params[0:5]
-    backward_euler_params[3] = params[5]
-    ypoints = definedOrderMethods(backward_euler_params, backwardEulerFormula)
+    euler_params = params[0:5]
+    euler_params[3] = params[5]
+    ypoints = definedOrderMethods(euler_params, eulerFormula)
     params = ypoints + params[1:6]
 
     writePoints(params, adamsMoultonMethod(params), 'Metodo de Adams-Moulton por Euler\n')
