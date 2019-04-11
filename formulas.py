@@ -1,7 +1,7 @@
 from sympy import *
 import math
 
-def calculateAdamsBashforthCoeffs(order, j):
+def calculateAdamsBashforthCoeffs(order, j): # https://www.ufrgs.br/reamat/CalculoNumerico/livro-oct/pdvi-metodo_de_adams-moulton.html
     k = 0
     product = 1
     while k < order:
@@ -88,11 +88,11 @@ def rungeKuttaFormula(f, yn, tn, h): # Considering 4th order
 def backwardDifferentiationFormula(f, ypoints, tn, h, order):
     recurrence_relations = [
         Symbol('yn+0') + h*Symbol('fn+1'),
-        Symbol('yn+1') + Symbol('yn+0') + Symbol('fn+2'),
-        Symbol('yn+2') + Symbol('yn+1') + Symbol('yn+0') + Symbol('fn+3'),
-        Symbol('yn+3') + Symbol('yn+2') + Symbol('yn+1') + Symbol('yn+0') + Symbol('fn+4'),
-        Symbol('yn+4') + Symbol('yn+3') + Symbol('yn+2') + Symbol('yn+1') + Symbol('yn+0') + Symbol('fn+5'),
-        Symbol('yn+5') + Symbol('yn+4') + Symbol('yn+3') + Symbol('yn+2') + Symbol('yn+1') + Symbol('yn+0') + Symbol('fn+6')
+        (4/3)*Symbol('yn+1') - (1/3)*Symbol('yn+0') + (2/3)*h*Symbol('fn+2'),
+        (18/11)*Symbol('yn+2') - (9/11)*Symbol('yn+1') + (2/11)*Symbol('yn+0') + (6/11)*h*Symbol('fn+3'),
+        (48/25)*Symbol('yn+3') - (36/25)*Symbol('yn+2') + (16/25)*Symbol('yn+1') - (3/25)*Symbol('yn+0') + (12/25)*h*Symbol('fn+4'),
+        (300/137)*Symbol('yn+4') - (300/137)*Symbol('yn+3') + (200/137)*Symbol('yn+2') - (75/137)*Symbol('yn+1') + (12/137)*Symbol('yn+0') + (60/137)*h*Symbol('fn+5'),
+        (360/147)*Symbol('yn+5') - (450/147)*Symbol('yn+4') + (400/147)*Symbol('yn+3') - (225/147)*Symbol('yn+2') + (72/147)*Symbol('yn+1') - (10/147)*Symbol('yn+0') + (60/147)*h*Symbol('fn+6')
     ]
 
     recurrence_relation = recurrence_relations[order-1]
