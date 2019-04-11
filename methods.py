@@ -125,7 +125,8 @@ def writePoints(params, ypoints, title):
     for yp in ypoints:
         o.write('{} {}\n'.format(i, yp))
         i += 1
-    
+    o.write('\n')
+
     o.close()
 
 def euler(params):
@@ -141,106 +142,106 @@ def runge_kutta(params):
     writePoints(params, definedOrderMethods(params, rungeKuttaFormula), 'Metodo de Runge-Kutta\n')
 
 def adam_bashforth(params):
-    writePoints(params, adamsBashforthMethod(params), 'Metodo de Adams-Bashforth\n')
+    writePoints([params[0], params[len(params)-5], params[len(params)-4]], adamsBashforthMethod(params), 'Metodo de Adams-Bashforth\n')
 
 def adam_bashforth_by_euler(params):
     euler_params = params[0:5]
     euler_params[3] = params[5]
     ypoints = definedOrderMethods(euler_params, eulerFormula)
-    params = ypoints + params[1:6]
+    adam_params = ypoints + params[1:6]
 
-    writePoints(params, adamsBashforthMethod(params), 'Metodo de Adams-Bashforth por Euler\n')
+    writePoints(params, adamsBashforthMethod(adam_params), 'Metodo de Adams-Bashforth por Euler\n')
 
 def adam_bashforth_by_euler_inverso(params):
     backward_euler_params = params[0:5]
     backward_euler_params[3] = params[5]
     ypoints = definedOrderMethods(backward_euler_params, backwardEulerFormula)
-    params = ypoints + params[1:6]
+    adam_params = ypoints + params[1:6]
 
-    writePoints(params, adamsBashforthMethod(params), 'Metodo de Adams-Bashforth por Euler Inverso\n')
+    writePoints(params, adamsBashforthMethod(adam_params), 'Metodo de Adams-Bashforth por Euler Inverso\n')
 
 def adam_bashforth_by_euler_aprimorado(params):
     improved_euler_params = params[0:5]
     improved_euler_params[3] = params[5]
     ypoints = definedOrderMethods(improved_euler_params, improvedEulerFormula)
-    params = ypoints + params[1:6]
+    adam_params = ypoints + params[1:6]
 
-    writePoints(params, adamsBashforthMethod(params), 'Metodo de Adams-Bashforth por Euler Apromirado\n')
+    writePoints(params, adamsBashforthMethod(adam_params), 'Metodo de Adams-Bashforth por Euler Apromirado\n')
 
 def adam_bashforth_by_runge_kutta(params):
     runge_kutta_params = params[0:5]
     runge_kutta_params[3] = params[5]
     ypoints = definedOrderMethods(runge_kutta_params, rungeKuttaFormula)
-    params = ypoints + params[1:6]
+    adam_params = ypoints + params[1:6]
 
-    writePoints(params, adamsBashforthMethod(params), 'Metodo de Adams-Bashforth por Runge Kutta\n')
+    writePoints(params, adamsBashforthMethod(adam_params), 'Metodo de Adams-Bashforth por Runge Kutta\n')
 
 def adam_multon(params):
-    writePoints(params, adamsMoultonMethod(params), 'Metodo de Adams-Moulton\n')
+    writePoints([params[0], params[len(params)-5], params[len(params)-4]], adamsMoultonMethod(params), 'Metodo de Adams-Moulton\n')
 
 def adam_multon_by_euler(params):
     euler_params = params[0:5]
     euler_params[3] = params[5]
     ypoints = definedOrderMethods(euler_params, eulerFormula)
-    params = ypoints + params[1:6]
+    adam_params = ypoints + params[1:6]
 
-    writePoints(params, adamsMoultonMethod(params), 'Metodo de Adams-Moulton por Euler\n')
+    writePoints(params, adamsMoultonMethod(adam_params), 'Metodo de Adams-Moulton por Euler\n')
 
 def adam_multon_by_euler_inverso(params):
     backward_euler_params = params[0:5]
     backward_euler_params[3] = params[5]
     ypoints = definedOrderMethods(backward_euler_params, backwardEulerFormula)
-    params = ypoints + params[1:6]
+    adam_params = ypoints + params[1:6]
 
-    writePoints(params, adamsMoultonMethod(params), 'Metodo de Adams-Moulton por Euler Inverso\n')
+    writePoints(params, adamsMoultonMethod(adam_params), 'Metodo de Adams-Moulton por Euler Inverso\n')
 
 def adam_multon_by_euler_aprimorado(params):
     improved_euler_params = params[0:5]
     improved_euler_params[3] = params[5]
     ypoints = definedOrderMethods(improved_euler_params, improvedEulerFormula)
-    params = ypoints + params[1:6]
+    adam_params = ypoints + params[1:6]
 
-    writePoints(params, adamsMoultonMethod(params), 'Metodo de Adams-Moulton por Euler Aprimorado\n')
+    writePoints(params, adamsMoultonMethod(adam_params), 'Metodo de Adams-Moulton por Euler Aprimorado\n')
     
 def adam_multon_by_runge_kutta(params):
     runge_kutta_params = params[0:5]
     runge_kutta_params[3] = params[5]
     ypoints = definedOrderMethods(runge_kutta_params, rungeKuttaFormula)
-    params = ypoints + params[1:6]
+    adam_params = ypoints + params[1:6]
 
-    writePoints(params, adamsMoultonMethod(params), 'Metodo de Adams-Moulton por Runge Kutta\n')
+    writePoints(params, adamsMoultonMethod(adam_params), 'Metodo de Adams-Moulton por Runge Kutta\n')
 
 def formula_inversa(params):
-    writePoints(params, backwardDifferentiationMethod(params), 'Metodo Formula Inversa de Diferenciacao\n')
+    writePoints([params[0], params[len(params)-5], params[len(params)-4]], backwardDifferentiationMethod(params), 'Metodo Formula Inversa de Diferenciacao\n')
 
 def formula_inversa_by_euler(params):
     euler_params = params[0:5]
     euler_params[3] = params[5]
     ypoints = definedOrderMethods(euler_params, eulerFormula)
-    params = ypoints + params[1:6]
+    bdf_params = ypoints + params[1:6]
 
-    writePoints(params, backwardDifferentiationMethod(params), 'Metodo Formula Inversa de Diferenciacao por Euler\n')
+    writePoints(params, backwardDifferentiationMethod(bdf_params), 'Metodo Formula Inversa de Diferenciacao por Euler\n')
 
 def formula_inversa_by_euler_inverso(params):
     backward_euler_params = params[0:5]
     backward_euler_params[3] = params[5]
     ypoints = definedOrderMethods(backward_euler_params, backwardEulerFormula)
-    params = ypoints + params[1:6]
+    bdf_params = ypoints + params[1:6]
 
-    writePoints(params, backwardDifferentiationMethod(params), 'Metodo Formula Inversa de Diferenciacao por Euler Inverso\n')
+    writePoints(params, backwardDifferentiationMethod(bdf_params), 'Metodo Formula Inversa de Diferenciacao por Euler Inverso\n')
 
 def formula_inversa_by_euler_aprimorado(params):
     improved_euler_params = params[0:5]
     improved_euler_params[3] = params[5]
     ypoints = definedOrderMethods(improved_euler_params, improvedEulerFormula)
-    params = ypoints + params[1:6]
+    bdf_params = ypoints + params[1:6]
 
-    writePoints(params, backwardDifferentiationMethod(params), 'Metodo Formula Inversa de Diferenciacao por Euler Aprimorado\n')
+    writePoints(params, backwardDifferentiationMethod(bdf_params), 'Metodo Formula Inversa de Diferenciacao por Euler Aprimorado\n')
 
 def formula_inversa_by_runge_kutta(params):
     runge_kutta_params = params[0:5]
     runge_kutta_params[3] = params[5]
     ypoints = definedOrderMethods(runge_kutta_params, rungeKuttaFormula)
-    params = ypoints + params[1:6]
+    bdf_params = ypoints + params[1:6]
 
-    writePoints(params, backwardDifferentiationMethod(params), 'Metodo Formula Inversa de Diferenciacao por Runge Kutta\n')
+    writePoints(params, backwardDifferentiationMethod(bdf_params), 'Metodo Formula Inversa de Diferenciacao por Runge Kutta\n')
